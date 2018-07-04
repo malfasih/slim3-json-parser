@@ -11,12 +11,15 @@
 
 namespace Malfasih\Slim;
 
+use Psr\Http\Message\ResponseInterface;
+
 class JsonParser {
 
 	/**
-	 * @var string
+	 * Contains response data
+	 * @var object
 	 */
-	private $rawData;
+	private $buffer;
 
 
 	/**
@@ -82,11 +85,6 @@ class JsonParser {
 	private $cors_headers = "GET, POST, PUT, DELETE, PATCH, OPTIONS";
 
 
-	public function __construct($response) {
-		$this->rawData = $response;
-	}
-
-
 	/**
 	 * Allow user to change CORS settings.
 	 * @var string
@@ -125,24 +123,23 @@ class JsonParser {
 	 * Return the JSON parsed of given params
 	 * @return string 
 	 */
-	public function print($http_status_code = 200, $message = '') {
-		$arrayBody = ['http_code' => $http_status_code, 'message' => $message];
+	public function print(ResponseInterface $response, $http_status_code = 200, $message = '') {
+		$arrayBody = ['response_code' => $http_status_code, 'message' => $message];
 
-		$this->rawData->withStatus($http_status_code);
-		$this->rawData->withHeader('Content-Type', $this->contentType);
-
+		$buffer = $response->withStatus($http_status_code)
+				 		   ->withHeader('Content-Type', $this->contentType);
 		if ($this->cors_status === true) {
-			$this->rawData->withHeader('Access-Control-Allow-Origin', $this->cors_domain);
-			$this->rawData->withHeader('Access-Control-Allow-Headers', $this->cors_headers);
-			$this->rawData->withHeader('Access-Control-Allow-Methods', $this->cors_methods);
+			$buffer = $buffer->withHeader('Access-Control-Allow-Origin', $this->cors_domain)
+				   			 ->withHeader('Access-Control-Allow-Headers', $this->cors_headers)
+				   			 ->withHeader('Access-Control-Allow-Methods', $this->cors_methods);
 		}
 
 		if ($this->options !== false) {
-			$this->rawData->write(json_encode($arrayBody, $this->options));
+			$buffer->write(json_encode($arrayBody, $this->options));
 		} else {
-			$this->rawData->write(json_encode($arrayBody));
+			$buffer->write(json_encode($arrayBody));
 		}
-
+		return $buffer;
 	}
 
 }
