@@ -25,11 +25,8 @@ or
 
 ```php
 <?php
-
 require __DIR__ . '/../vendor/autoload.php';
-
 $app = new \Slim\App();
-
 $container = $app->getContainer();
 
 $container['json'] = function($container) {
@@ -41,7 +38,7 @@ $container['json'] = function($container) {
 
 ## Testing
 
-Just with a line of code, and it actually works.
+Just with a single line of code, and it actually works.
 
 ```php
 <?php
