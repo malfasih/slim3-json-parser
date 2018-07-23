@@ -123,11 +123,10 @@ class JsonParser {
 	 * Return the JSON parsed of given params
 	 * @return string 
 	 */
-	public function print(ResponseInterface $response, $http_status_code = 200, $message = '') {
-		$arrayBody = ['response_code' => $http_status_code, 'message' => $message];
+	public function print(ResponseInterface $response, $status = false, $message = array()) {
+		$arrayBody = ['status' => $status, 'text' => $message];
 
-		$buffer = $response->withStatus($http_status_code)
-				 		   ->withHeader('Content-Type', $this->contentType);
+		$buffer = $response->withHeader('Content-Type', $this->contentType);
 		if ($this->cors_status === true) {
 			$buffer = $buffer->withHeader('Access-Control-Allow-Origin', $this->cors_domain)
 				   			 ->withHeader('Access-Control-Allow-Headers', $this->cors_headers)
