@@ -89,7 +89,7 @@ class JsonParser {
 	 * Allow user to change CORS settings.
 	 * @var string
 	 */
-	public function setConfig($contentType = '', $options = false, $cors_status = true) {
+	public function setConfig($options = false, $contentType = '', $cors_status = true) {
 		if ($contentType !== '') {
 			$this->contentType = $contentType;
 		}
