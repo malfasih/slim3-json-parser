@@ -45,6 +45,6 @@ Just with a single line of code, and it actually works.
 
 public function getUserData($request, $response)
 {
-  return $this->json->print($response, 200, 'OK');
+  return $this->json->print($response, true, 'OK');
 }
 ```
